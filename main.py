@@ -36,6 +36,52 @@ def test_consecutive_bits(sequence) -> bool:
     return False
 
 
+def get_max(lst: list) -> int:
+    max = lst[0]
+    for i in range(len(lst)):
+        if lst[i] > max:
+            max = lst[i]
+    return max
+
+
+def get_sum_quadro_x(v_1: int, v_2: int, v_3: int, v_4: int):
+    quadro_x = 0
+    # pi_1 = 0.2148
+    # pi_2 = 0.3672
+    # pi_3 = 0.2305
+    # pi_4 = 0.1875
+
+    quadro_x += (pow((v_1 - 16 * 0.2148), 2)) / (16 * 0.2148)
+    quadro_x += (pow((v_2 - 16 * 0.3672), 2)) / (16 * 0.3672)
+    quadro_x += (pow((v_3 - 16 * 0.2305), 2)) / (16 * 0.2305)
+    quadro_x += (pow((v_4 - 16 * 0.1875), 2)) / (16 * 0.1875)
+    return quadro_x
+
+
+def get_count_blocks_max_length(sequence: str):
+    v_1 = 0
+    v_2 = 0
+    v_3 = 0
+    v_4 = 0
+    lst = list(filter(None, sequence.split('0')))
+    dict = {
+        "<=1": 0,
+        "=2": 0,
+        "=3": 0,
+        ">=4": 0
+    }
+    for i in range(len(lst) - 1):
+        if len(lst[i]) <= 1:
+            dict["<=1"] += 1
+        elif len(lst[i]) == 2:
+            dict["=2"] += 1
+        elif len(lst[i]) == 3:
+            dict["=3"] += 1
+        elif len(lst[i]) >= 4:
+            dict[">=4"] += 1
+    return dict["<=1"], dict["=2"], dict["=3"], dict[">=4"]
+
+
 if __name__ == '__main__':
     sequence = read_file("sequence.txt")
     dictionary_count = frequency_beat_test(sequence)
@@ -48,10 +94,14 @@ if __name__ == '__main__':
     # large, so the test passed
 
     # part b)
-    print(test_consecutive_bits(sequence))
-    p_2 = math.erfc((abs(dictionary_count['1'] - 2 * 128 * frequency_ones * (1 - frequency_ones))) / (2 * math.sqrt(2 * 128) * frequency_ones * (1 - frequency_ones)))
+    # print(test_consecutive_bits(sequence))
+    p_2 = math.erfc((abs(dictionary_count['1'] - 2 * BIT * frequency_ones * (1 - frequency_ones))) / (2 * math.sqrt(2 * BIT) * frequency_ones * (1 - frequency_ones)))
     print(p_2)
     # 0.5057229016557836
     # True
 
     # part c)
+    v_1, v_2, v_3, v_4 = get_count_blocks_max_length(sequence)
+    # print(v_1, v_2, v_3, v_4)
+    p_3 = get_sum_quadro_x(v_1, v_2, v_3, v_4)
+    print(p_3) # 62.20064543595837
