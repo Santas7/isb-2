@@ -1,6 +1,6 @@
 import math
 
-BIT = 128 # total number of bits
+BIT = 128  # total number of bits
 
 
 def read_file(filename: str) -> str:
@@ -37,19 +37,21 @@ def test_consecutive_bits(sequence) -> bool:
 
 
 if __name__ == '__main__':
-    # part a)
     sequence = read_file("sequence.txt")
     dictionary_count = frequency_beat_test(sequence)
-    frequency_zeros = dictionary_count['0']/BIT
-    frequency_ones = dictionary_count['1']/BIT
+    frequency_zeros = dictionary_count['0'] / BIT
+    frequency_ones = dictionary_count['1'] / BIT
     difference_the_received_frequencies = frequency_zeros - frequency_ones
-    print(difference_the_received_frequencies) # 0.1328125
+    print(difference_the_received_frequencies)
+    p_1 = difference_the_received_frequencies # 0.0625
     # Considering that the difference between the frequencies is not significantly
     # large, so the test passed
 
     # part b)
     print(test_consecutive_bits(sequence))
+    p_2 = math.erfc((abs(dictionary_count['1'] - 2 * 128 * frequency_ones * (1 - frequency_ones))) / (2 * math.sqrt(2 * 128) * frequency_ones * (1 - frequency_ones)))
+    print(p_2)
+    # 0.5057229016557836
     # True
 
     # part c)
-    
