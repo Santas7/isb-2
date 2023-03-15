@@ -1,4 +1,5 @@
 import math
+import re
 
 BIT = 128  # total number of bits
 
@@ -59,26 +60,33 @@ def get_sum_quadro_x(v_1: int, v_2: int, v_3: int, v_4: int):
 
 
 def get_count_blocks_max_length(sequence: str):
-    v_1 = 0
-    v_2 = 0
-    v_3 = 0
-    v_4 = 0
-    lst = list(filter(None, sequence.split('0')))
+    # split our sequence into 8 bits
+    lst = re.sub('([^ ]{8})', r'\1 ', sequence).replace('  ', ' ').split(' ')
+
     dict = {
         "<=1": 0,
         "=2": 0,
         "=3": 0,
         ">=4": 0
     }
+
     for i in range(len(lst) - 1):
-        if len(lst[i]) <= 1:
-            dict["<=1"] += 1
-        elif len(lst[i]) == 2:
-            dict["=2"] += 1
-        elif len(lst[i]) == 3:
-            dict["=3"] += 1
-        elif len(lst[i]) >= 4:
-            dict[">=4"] += 1
+        # ['10101001', '01111010', '00011001', ... ]
+        for j in range(len(lst[i]) - 1):
+            # '10101001', '01111010', ...
+            # finding a block of units of maximum length
+            longest_match = len(max(re.findall('1+', lst[i]), key=len))
+
+            # distribute the found maximum in the created dictionary
+            if longest_match <= 1:
+                dict["<=1"] += 1
+            elif longest_match == 2:
+                dict["=2"] += 1
+            elif longest_match == 3:
+                dict["=3"] += 1
+            elif longest_match >= 4:
+                dict[">=4"] += 1
+            break
     return dict["<=1"], dict["=2"], dict["=3"], dict[">=4"]
 
 
@@ -104,4 +112,4 @@ if __name__ == '__main__':
     v_1, v_2, v_3, v_4 = get_count_blocks_max_length(sequence)
     # print(v_1, v_2, v_3, v_4)
     p_3 = get_sum_quadro_x(v_1, v_2, v_3, v_4)
-    print(p_3) # 62.20064543595837
+    print(p_3) # 2.6385189536200038
